@@ -1,5 +1,6 @@
 import psycopg2
 import time
+from Pipeline import uploader
 
 db_params = {
     'host': 'localhost',
@@ -23,23 +24,24 @@ cursor.execute(query)
 
 
 def read_entry():
-    row = cursor.fetchone()
-    if row:
-        print("Read values:")
-        for column_name, value in zip(cursor.description, row):
-            print(f"{column_name[0]}: {value}")
-    else:
-        print("No more entries in the table.")
+    is_entry = True
+    while is_entry:
+        row = cursor.fetchone()
+        if row:
+            entry = dict(zip((column[0] for column in cursor.description), row))
+            # entry = zip(cursor.description, row)
+            yield entry
+            time.sleep(5)
+        else:
+            is_entry = False
 
 
-try:
-    while True:
-        read_entry()
-        time.sleep(5)  # Sleep for 5 seconds before the next iteration
+#
+# for entry in read_entry():
+#     print(entry)
 
-except KeyboardInterrupt:
-    print("Program terminated by user.")
-finally:
-    # Close the database connection when done
-    cursor.close()
-    connection.close()
+
+for entry in read_entry():
+    uploader.upload_to_crimes_db(entry)
+cursor.close()
+connection.close()
