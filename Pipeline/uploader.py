@@ -1,5 +1,9 @@
 import psycopg2
 import logging
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def upload_area(cursor, area_data):
@@ -44,20 +48,12 @@ def upload_case(cursor, case_data):
 
 
 def upload_to_crimes_db(entry):
-    crimes_db_params = {
-        'host': 'localhost',
-        'database': 'crimes',
-        'user': 'postgres',
-        'password': 'Peach124',
-        'port': 5432
-    }
-
     crimes_connection = psycopg2.connect(
-        host=crimes_db_params['host'],
-        database=crimes_db_params['database'],
-        user=crimes_db_params['user'],
-        password=crimes_db_params['password'],
-        port=crimes_db_params['port']
+        host=os.getenv('CRIMES_DB_HOST'),
+        database=os.getenv('CRIMES_DB_DATABASE'),
+        user=os.getenv('CRIMES_DB_USER'),
+        password=os.getenv('CRIMES_DB_PASSWORD'),
+        port=os.getenv('CRIMES_DB_PORT')
     )
 
     crimes_cursor = crimes_connection.cursor()

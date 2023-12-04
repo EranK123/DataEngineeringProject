@@ -2,36 +2,31 @@ import psycopg2
 import time
 
 from confluent_kafka import Producer
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 from Pipeline import uploader
 
-db_params = {
-    'host': 'localhost',
-    'database': 'crimesla',
-    'user': 'postgres',
-    'password': 'Peach124',
-    'port': 5432
-}
-
 connection = psycopg2.connect(
-    host=db_params['host'],
-    database=db_params['database'],
-    user=db_params['user'],
-    password=db_params['password'],
-    port=db_params['port']
+    host=os.getenv('CRIMESLA_DB_HOST'),
+    database=os.getenv('CRIMESLA_DB_DATABASE'),
+    user=os.getenv('CRIMESLA_DB_USER'),
+    password=os.getenv('CRIMESLA_DB_PASSWORD'),
+    port=os.getenv('CRIMESLA_DB_PORT')
 )
 
 kafka_params = {
-    'bootstrap.servers': 'localhost:9092',  # Update with your Kafka bootstrap servers
-    'client.id': 'crimes_producer',
+    'bootstrap.servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS'),
+    'client.id': os.getenv('KAFKA_CLIENT_ID'),
 }
 
 kafka_producer = Producer(kafka_params)
 
-
 cursor = connection.cursor()
 query = "SELECT * FROM allcrimedata;"
 cursor.execute(query)
+kafka_topic = 'crimes_topic'
 
 
 def read_entry():
@@ -40,21 +35,13 @@ def read_entry():
         row = cursor.fetchone()
         if row:
             entry = dict(zip((column[0] for column in cursor.description), row))
-            kafka_topic = 'crimes_topic'
             kafka_producer.produce(kafka_topic, value=str(entry))
-            # yield entry
             kafka_producer.flush()
             time.sleep(5)
         else:
             is_entry = False
 
 
-#
-# for entry in read_entry():
-#     print(entry)
-
-
-# for entry in read_entry():
-#     uploader.upload_to_crimes_db(entry)
+read_entry()
 cursor.close()
 connection.close()
