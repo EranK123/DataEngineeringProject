@@ -36,7 +36,7 @@ def read_entry():
             entry = dict(zip((column[0] for column in cursor.description), row))
             kafka_producer.produce(kafka_topic, value=str(entry))
             kafka_producer.flush()
-            time.sleep(5)
+            time.sleep(1)
         else:
             is_entry = False
 
