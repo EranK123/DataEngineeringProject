@@ -6,7 +6,6 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-from Pipeline import uploader
 
 connection = psycopg2.connect(
     host=os.getenv('CRIMESLA_DB_HOST'),
