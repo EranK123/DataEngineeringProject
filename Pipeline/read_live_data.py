@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 connection = psycopg2.connect(
     host=os.getenv('CRIMESLA_DB_HOST'),
     database=os.getenv('CRIMESLA_DB_DATABASE'),
@@ -26,16 +25,10 @@ def read_entry():
         row = cursor.fetchone()
         if row:
             entry = dict(zip((column[0] for column in cursor.description), row))
-            # entry = zip(cursor.description, row)
             yield entry
             time.sleep(5)
         else:
             is_entry = False
-
-
-#
-# for entry in read_entry():
-#     print(entry)
 
 
 for entry in read_entry():

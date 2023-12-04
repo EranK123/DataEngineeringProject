@@ -50,7 +50,6 @@ def upload_to_crimes_db(entry):
 
     crimes_cursor = crimes_connection.cursor()
 
-    # Upload data to the corresponding tables
     upload_area(crimes_cursor, entry)
     upload_crime_description(crimes_cursor, entry)
     upload_weapon(crimes_cursor, entry)
