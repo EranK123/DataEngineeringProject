@@ -1,4 +1,6 @@
 import ast
+import re
+
 from confluent_kafka import Consumer, KafkaError
 import os
 from dotenv import load_dotenv
@@ -18,6 +20,13 @@ kafka_topic = 'crimes_topic'
 kafka_consumer.subscribe([kafka_topic])
 
 
+def replace_quotes(match):
+    return match.group(0).replace("'", '"')
+
+
+pattern = r"(?<!\w)'(.*?)'"
+
+
 def consume_and_upload():
     try:
         while True:
@@ -31,7 +40,7 @@ def consume_and_upload():
 
             print("Received Message:", msg.value())
             decoded_message_str = msg.value().decode('utf-8')
-            decoded_message_str = decoded_message_str.replace("'", "\"")
+            decoded_message_str = re.sub(pattern, replace_quotes, decoded_message_str)
             entry = ast.literal_eval(decoded_message_str)
             upload_to_crimes_db(entry)
 
