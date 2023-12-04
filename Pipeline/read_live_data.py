@@ -1,21 +1,18 @@
 import psycopg2
 import time
 from Pipeline import uploader
+import os
+from dotenv import load_dotenv
 
-db_params = {
-    'host': 'localhost',
-    'database': 'crimesla',
-    'user': 'postgres',
-    'password': 'Peach124',
-    'port': 5432
-}
+load_dotenv()
+
 
 connection = psycopg2.connect(
-    host=db_params['host'],
-    database=db_params['database'],
-    user=db_params['user'],
-    password=db_params['password'],
-    port=db_params['port']
+    host=os.getenv('CRIMESLA_DB_HOST'),
+    database=os.getenv('CRIMESLA_DB_DATABASE'),
+    user=os.getenv('CRIMESLA_DB_USER'),
+    password=os.getenv('CRIMESLA_DB_PASSWORD'),
+    port=os.getenv('CRIMESLA_DB_PORT')
 )
 
 cursor = connection.cursor()
