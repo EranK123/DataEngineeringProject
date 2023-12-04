@@ -16,7 +16,6 @@ kafka_params = {
 
 kafka_consumer = Consumer(kafka_params)
 kafka_topic = 'crimes_topic'
-
 kafka_consumer.subscribe([kafka_topic])
 
 
@@ -38,7 +37,7 @@ def consume_and_upload():
                     print(msg.error())
                     break
 
-            print("Received Message:", msg.value())
+            # print("Received Message:", msg.value())
             decoded_message_str = msg.value().decode('utf-8')
             decoded_message_str = re.sub(pattern, replace_quotes, decoded_message_str)
             entry = ast.literal_eval(decoded_message_str)
