@@ -36,6 +36,5 @@ def upload_to_crimes_db(entry):
            [entry['DR_NO'], entry['VictId'], entry['AREA'], entry['Crm Cd'], entry['Weapon Used Cd']])
 
     crimes_connection.commit()
-
     crimes_cursor.close()
     crimes_connection.close()
