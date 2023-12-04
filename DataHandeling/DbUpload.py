@@ -30,7 +30,7 @@ conn.close()
 db_params['database'] = 'crimesla'
 engine = create_engine(f'postgresql://{db_params["user"]}:{db_params["password"]}@{db_params["host"]}/{db_params["database"]}')
 
-crime_data_path = "/Users/erankatz/DataEngineeringProject/Crime_Data_from_2020_to_Present 2.csv"
+crime_data_path = "/Users/erankatz/DataEngineeringProject/CrimeData.csv"
 
 
 df = pd.read_csv(crime_data_path)
