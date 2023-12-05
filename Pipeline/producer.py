@@ -5,15 +5,6 @@ from confluent_kafka import Producer
 import os
 from dotenv import load_dotenv
 
-#
-#
-# connection = psycopg2.connect(
-#     host=os.getenv('CRIMESLA_DB_HOST'),
-#     database=os.getenv('CRIMESLA_DB_DATABASE'),
-#     user=os.getenv('CRIMESLA_DB_USER'),
-#     password=os.getenv('CRIMESLA_DB_PASSWORD'),
-#     port=os.getenv('CRIMESLA_DB_PORT')
-# )
 from DatabaseHandler import DatabaseHandler
 load_dotenv()
 
