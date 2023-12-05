@@ -1,53 +1,56 @@
 import ast
-import re
+import json
 
+import pandas as pd
 from confluent_kafka import Consumer, KafkaError
 import os
 from dotenv import load_dotenv
-from uploader import upload_to_crimes_db
-
-load_dotenv()
-
-kafka_params = {
-    'bootstrap.servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS'),
-    'group.id': 'my_group',
-    'auto.offset.reset': 'earliest',
-}
-
-kafka_consumer = Consumer(kafka_params)
-kafka_topic = 'crimes_topic'
-kafka_consumer.subscribe([kafka_topic])
+from deltalake import write_deltalake, DeltaTable
 
 
+class KafkaConsumerHandler:
+    def __init__(self, bootstrap_servers, group_id, auto_offset_reset, topic, delta_table_path):
+        kafka_params = {
+            'bootstrap.servers': bootstrap_servers,
+            'group.id': group_id,
+            'auto.offset.reset': auto_offset_reset,
+        }
 
-def replace_quotes(match):
-    return match.group(0).replace("'", '"')
+        self.kafka_consumer = Consumer(kafka_params)
+        self.kafka_topic = topic
+        self.kafka_consumer.subscribe([self.kafka_topic])
+        self.delta_table_path = delta_table_path
 
+    def send_to_delta_lake(self, df):
+        write_deltalake(self.delta_table_path, df, mode='append')
 
-pattern = r"(?<!\w)'(.*?)'"
+    def consume_and_send_to_delta_lake(self):
+        try:
+            while True:
+                msg = self.kafka_consumer.poll(timeout=1000)
+                if msg.error():
+                    if msg.error().code() == KafkaError._PARTITION_EOF:
+                        continue
+                    else:
+                        print(msg.error())
+                        break
 
+                raw_message = msg.value().decode('utf-8')
+                df = pd.DataFrame([raw_message])
+                self.send_to_delta_lake(df)
 
-def consume_and_upload():
-    try:
-        while True:
-            msg = kafka_consumer.poll(timeout=1000)
-            if msg.error():
-                if msg.error().code() == KafkaError._PARTITION_EOF:
-                    continue
-                else:
-                    print(msg.error())
-                    break
-            ## need here to send the undecoded message to the data lake
-            decoded_message_str = msg.value().decode('utf-8')
-            decoded_message_str = re.sub(pattern, replace_quotes, decoded_message_str)
-            entry = ast.literal_eval(decoded_message_str)
-            upload_to_crimes_db(entry)
-
-    except KeyboardInterrupt:
-        pass
-    finally:
-        kafka_consumer.close()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            self.kafka_consumer.close()
 
 
 if __name__ == "__main__":
-    consume_and_upload()
+    load_dotenv()
+    delta_table_path = os.getenv('DELTA_TABLE_PATH')
+    consumer = KafkaConsumerHandler(os.getenv('KAFKA_BOOTSTRAP_SERVERS'),
+                                    'my_group',
+                                    'earliest',
+                                    'crimes_topic',
+                                    delta_table_path)
+    consumer.consume_and_send_to_delta_lake()

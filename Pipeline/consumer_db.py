@@ -5,9 +5,6 @@ import os
 from dotenv import load_dotenv
 from uploader import upload_to_crimes_db
 
-load_dotenv()
-
-
 
 class KafkaConsumerHandler:
     def __init__(self, bootstrap_servers, group_id, auto_offset_reset, topic):
@@ -47,6 +44,7 @@ class KafkaConsumerHandler:
 
 
 if __name__ == "__main__":
+    load_dotenv()
     consumer = KafkaConsumerHandler(os.getenv('KAFKA_BOOTSTRAP_SERVERS'),
                                     'my_group',
                                     'earliest',

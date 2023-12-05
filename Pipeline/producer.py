@@ -7,17 +7,11 @@ from dotenv import load_dotenv
 
 from DatabaseHandler import DatabaseHandler
 
-load_dotenv()
-
 
 class KafkaProducerHandler:
     def __init__(self, db_name, bootstrap_servers, client_id):
         self.db_handler = DatabaseHandler(db_name)
 
-        # self.kafka_params = {
-        #     'bootstrap.servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS'),
-        #     'client.id': os.getenv('KAFKA_CLIENT_ID'),
-        # }
         self.kafka_params = {
             'bootstrap.servers': bootstrap_servers,
             'client.id': client_id,
@@ -41,8 +35,8 @@ class KafkaProducerHandler:
                 is_entry = False
 
 
-
 if __name__ == '__main__':
+    load_dotenv()
     producer = KafkaProducerHandler('CRIMESLA', os.getenv('KAFKA_BOOTSTRAP_SERVERS'), os.getenv('KAFKA_CLIENT_ID'))
     producer.read_entry()
     producer.db_handler.close_connection()

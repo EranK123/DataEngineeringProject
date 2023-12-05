@@ -1,8 +1,4 @@
-import psycopg2
 import logging
-import os
-from dotenv import load_dotenv
-
 from DatabaseHandler import DatabaseHandler
 
 
