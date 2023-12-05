@@ -14,14 +14,6 @@ def insert(cursor, table_name, column_names, values):
 
 
 def upload_to_crimes_db(entry):
-    # load_dotenv()
-    # crimes_connection = psycopg2.connect(
-    #     host=os.getenv('CRIMES_DB_HOST'),
-    #     database=os.getenv('CRIMES_DB_DATABASE'),
-    #     user=os.getenv('CRIMES_DB_USER'),
-    #     password=os.getenv('CRIMES_DB_PASSWORD'),
-    #     port=os.getenv('CRIMES_DB_PORT')
-    # )
     db_handler = DatabaseHandler('CRIMES')
     insert(db_handler.cursor, 'area', ['AREA', 'AREA_NAME', 'Rpt_Dist_No'],
            [entry['AREA'], entry['AREA NAME'], entry['Rpt Dist No']])

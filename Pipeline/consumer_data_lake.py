@@ -36,7 +36,7 @@ def consume_and_upload():
                 else:
                     print(msg.error())
                     break
-
+            ## need here to send the undecoded message to the data lake
             decoded_message_str = msg.value().decode('utf-8')
             decoded_message_str = re.sub(pattern, replace_quotes, decoded_message_str)
             entry = ast.literal_eval(decoded_message_str)
