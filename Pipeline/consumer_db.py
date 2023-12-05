@@ -8,6 +8,7 @@ from uploader import upload_to_crimes_db
 load_dotenv()
 
 
+
 class KafkaConsumerHandler:
     def __init__(self, bootstrap_servers, group_id, auto_offset_reset, topic):
         kafka_params = {

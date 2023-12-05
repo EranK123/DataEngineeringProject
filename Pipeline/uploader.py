@@ -28,5 +28,6 @@ def upload_to_crimes_db(entry):
     insert(db_handler.cursor, 'case_relation', ['DR_NO', 'VictId', 'AREA', 'Crm_Cd', 'Weapon_Used_Cd'],
            [entry['DR_NO'], entry['VictId'], entry['AREA'], entry['Crm Cd'], entry['Weapon Used Cd']])
 
+
     db_handler.crimes_connection.commit()
     db_handler.close_connection()

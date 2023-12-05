@@ -19,6 +19,7 @@ kafka_topic = 'crimes_topic'
 kafka_consumer.subscribe([kafka_topic])
 
 
+
 def replace_quotes(match):
     return match.group(0).replace("'", '"')
 

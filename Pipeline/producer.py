@@ -41,6 +41,7 @@ class KafkaProducerHandler:
                 is_entry = False
 
 
+
 if __name__ == '__main__':
     producer = KafkaProducerHandler('CRIMESLA', os.getenv('KAFKA_BOOTSTRAP_SERVERS'), os.getenv('KAFKA_CLIENT_ID'))
     producer.read_entry()
