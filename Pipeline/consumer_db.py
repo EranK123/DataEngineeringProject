@@ -22,25 +22,21 @@ class KafkaConsumerHandler:
         return match.group(0).replace("'", '"')
 
     def consume_and_upload(self):
-        try:
-            while True:
-                msg = self.kafka_consumer.poll(timeout=1000)
-                if msg.error():
-                    if msg.error().code() == KafkaError._PARTITION_EOF:
-                        continue
-                    else:
-                        print(msg.error())
-                        break
+        while True:
+            msg = self.kafka_consumer.poll(timeout=1000)
+            if msg.error():
+                if msg.error().code() == KafkaError._PARTITION_EOF:
+                    continue
+                else:
+                    print(msg.error())
+                    break
 
-                decoded_message_str = msg.value().decode('utf-8')
-                decoded_message_str = re.sub(r"(?<!\w)'(.*?)'", self.replace_quotes, decoded_message_str)
-                entry = ast.literal_eval(decoded_message_str)
-                upload_to_crimes_db(entry)
+            decoded_message_str = msg.value().decode('utf-8')
+            decoded_message_str = re.sub(r"(?<!\w)'(.*?)'", self.replace_quotes, decoded_message_str)
+            entry = ast.literal_eval(decoded_message_str)
+            upload_to_crimes_db(entry)
 
-        except KeyboardInterrupt:
-            pass
-        finally:
-            self.kafka_consumer.close()
+        self.kafka_consumer.close()
 
 
 if __name__ == "__main__":

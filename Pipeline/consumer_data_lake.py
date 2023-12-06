@@ -1,6 +1,3 @@
-import ast
-import json
-
 import pandas as pd
 from confluent_kafka import Consumer, KafkaError
 import os
@@ -25,24 +22,20 @@ class KafkaConsumerHandler:
         write_deltalake(self.delta_table_path, df, mode='append')
 
     def consume_and_send_to_delta_lake(self):
-        try:
-            while True:
-                msg = self.kafka_consumer.poll(timeout=1000)
-                if msg.error():
-                    if msg.error().code() == KafkaError._PARTITION_EOF:
-                        continue
-                    else:
-                        print(msg.error())
-                        break
+        while True:
+            msg = self.kafka_consumer.poll(timeout=1000)
+            if msg.error():
+                if msg.error().code() == KafkaError._PARTITION_EOF:
+                    continue
+                else:
+                    print(msg.error())
+                    break
 
-                raw_message = msg.value().decode('utf-8')
-                df = pd.DataFrame([raw_message])
-                self.send_to_delta_lake(df)
+            raw_message = msg.value().decode('utf-8')
+            df = pd.DataFrame([raw_message])
+            self.send_to_delta_lake(df)
 
-        except KeyboardInterrupt:
-            pass
-        finally:
-            self.kafka_consumer.close()
+        self.kafka_consumer.close()
 
 
 if __name__ == "__main__":
