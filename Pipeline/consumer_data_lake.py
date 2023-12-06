@@ -2,7 +2,7 @@ import pandas as pd
 from confluent_kafka import Consumer, KafkaError
 import os
 from dotenv import load_dotenv
-from deltalake import write_deltalake, DeltaTable
+from deltalake import write_deltalake
 
 
 class KafkaConsumerHandler:

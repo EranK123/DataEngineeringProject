@@ -1,22 +1,17 @@
 import ast
 import re
 from confluent_kafka import Consumer, KafkaError
-import os
-from dotenv import load_dotenv
+
+from Kafka.KafkaConsumer import KafkaConsumer
 from uploader import upload_to_crimes_db
 
+kafka_consumer_handler = KafkaConsumer()
 
-class KafkaConsumerHandler:
-    def __init__(self, bootstrap_servers, group_id, auto_offset_reset, topic):
-        kafka_params = {
-            'bootstrap.servers': bootstrap_servers,
-            'group.id': group_id,
-            'auto.offset.reset': auto_offset_reset,
-        }
 
-        self.kafka_consumer = Consumer(kafka_params)
-        self.kafka_topic = topic
-        self.kafka_consumer.subscribe([self.kafka_topic])
+class ConsumerHandler:
+    def __init__(self):
+        self.kafka_consumer = Consumer(kafka_consumer_handler.kafka_params)
+        self.kafka_consumer.subscribe([kafka_consumer_handler.kafka_topic])
 
     def replace_quotes(self, match):
         return match.group(0).replace("'", '"')
@@ -40,9 +35,5 @@ class KafkaConsumerHandler:
 
 
 if __name__ == "__main__":
-    load_dotenv()
-    consumer = KafkaConsumerHandler(os.getenv('KAFKA_BOOTSTRAP_SERVERS'),
-                                    'my_group',
-                                    'earliest',
-                                    'crimes_topic')
+    consumer = ConsumerHandler()
     consumer.consume_and_upload()
