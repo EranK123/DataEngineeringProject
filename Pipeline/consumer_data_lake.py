@@ -7,8 +7,8 @@ datalake = DataLake()
 
 class DeltaLakeHandler:
     def __init__(self):
-        self.kafka_consumer = Consumer(datalake.kafka_params)
-        self.kafka_consumer.subscribe([datalake.kafka_topic])
+        self.kafka_consumer = Consumer(datalake.kafka_conn.kafka_params)
+        self.kafka_consumer.subscribe([datalake.kafka_conn.kafka_topic])
 
     def consume_and_send_to_delta_lake(self):
         while True:

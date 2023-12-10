@@ -1,30 +1,30 @@
 import ast
 import re
 from confluent_kafka import Consumer, KafkaError
-
-from Kafka.KafkaConsumer import KafkaConsumer
+from Kafka.KafkaConnector import KafkaConnector
 from uploader import upload_to_crimes_db
 
-kafka_consumer_handler = KafkaConsumer()
+kafka_connector = KafkaConnector()
 
 
 class ConsumerHandler:
     def __init__(self):
-        self.kafka_consumer = Consumer(kafka_consumer_handler.kafka_params)
-        self.kafka_consumer.subscribe([kafka_consumer_handler.kafka_topic])
+        self.kafka_consumer = Consumer(kafka_connector.kafka_params)
+        self.kafka_consumer.subscribe([kafka_connector.kafka_topic])
+        self.keep_polling = True
 
     def replace_quotes(self, match):
         return match.group(0).replace("'", '"')
 
     def consume_and_upload(self):
-        while True: #for loop on msg
+        while self.keep_polling:
             msg = self.kafka_consumer.poll(timeout=1000)
             if msg.error():
                 if msg.error().code() == KafkaError._PARTITION_EOF:
                     continue
                 else:
                     print(msg.error())
-                    break
+                    self.keep_polling = False
 
             decoded_message_str = msg.value().decode('utf-8')
             decoded_message_str = re.sub(r"(?<!\w)'(.*?)'", self.replace_quotes, decoded_message_str)
