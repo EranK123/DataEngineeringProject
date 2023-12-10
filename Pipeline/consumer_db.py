@@ -17,7 +17,7 @@ class ConsumerHandler:
         return match.group(0).replace("'", '"')
 
     def consume_and_upload(self):
-        while True:
+        while True: #for loop on msg
             msg = self.kafka_consumer.poll(timeout=1000)
             if msg.error():
                 if msg.error().code() == KafkaError._PARTITION_EOF:
