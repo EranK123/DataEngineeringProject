@@ -1,8 +1,9 @@
 import ast
+import json
 import re
 from confluent_kafka import Consumer, KafkaError
 from Kafka.KafkaConnector import KafkaConnector
-from uploader import upload_to_crimes_db
+from Pipeline.uploader import upload_to_crimes_db
 
 kafka_connector = KafkaConnector()
 
@@ -29,6 +30,7 @@ class ConsumerHandler:
             decoded_message_str = msg.value().decode('utf-8')
             decoded_message_str = re.sub(r"(?<!\w)'(.*?)'", self.replace_quotes, decoded_message_str)
             entry = ast.literal_eval(decoded_message_str)
+            # entry = json.loads(decoded_message_str)
             upload_to_crimes_db(entry)
 
         self.kafka_consumer.close()

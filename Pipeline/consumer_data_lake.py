@@ -22,7 +22,6 @@ class DeltaLakeHandler:
 
             raw_message = msg.value().decode('utf-8')
             df = pd.DataFrame([raw_message])
-            print(df)
             datalake.send_to_delta_lake(df)
 
         self.kafka_consumer.close()

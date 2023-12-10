@@ -1,6 +1,5 @@
 import time
 from confluent_kafka import Producer
-
 import const
 from DatabaseHandler import DatabaseHandler
 from Kafka.KafkaConnector import KafkaConnector
