@@ -21,7 +21,7 @@ conn = psycopg2.connect(
 
 cur = conn.cursor()
 conn.set_session(autocommit=True)
-# cur.execute("CREATE DATABASE IF NOT EXISTS CrimesLA")
+cur.execute("CREATE DATABASE CrimesLA")
 
 conn.commit()
 cur.close()

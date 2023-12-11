@@ -11,6 +11,7 @@ crime_desc_df = unfiltered_csv[['Crm Cd', 'Crm Cd Desc']]
 weapon_df = unfiltered_csv[['Weapon Used Cd', 'Weapon Desc']]
 
 unfiltered_csv['VictId'] = unfiltered_csv.index
+unfiltered_csv['idx'] = unfiltered_csv.index
 
 unfiltered_csv.to_csv("CrimeData.csv", index=False)
 

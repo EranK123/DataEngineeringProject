@@ -1,6 +1,6 @@
 import time
 import const
-from DatabaseHandler import DatabaseHandler
+from DBHandeling.DatabaseHandler import DatabaseHandler
 from Kafka.KafkaConnector import KafkaConnector
 
 
@@ -19,7 +19,7 @@ class ProducerHandler:
                 entry = dict(zip((column for column in columns), row))
                 self.kafka_producer.produce(KafkaConnector().kafka_topic, value=str(entry))
                 self.kafka_producer.flush()
-                time.sleep(5)
+                time.sleep(1)
             else:
                 is_entry = False
 

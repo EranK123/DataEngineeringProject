@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from DatabaseHandler import DatabaseHandler
+from DBHandeling.DatabaseHandler import DatabaseHandler
 
 db_handler = DatabaseHandler('CRIMES')
 

@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from DatabaseHandler import DatabaseHandler
+from DataHandeling.DatabaseHandler import DatabaseHandler
 
 db_handler = DatabaseHandler('CRIMES')
 db_handler.cursor.execute("SELECT AREA, AREA_NAME, Rpt_Dist_No FROM area")

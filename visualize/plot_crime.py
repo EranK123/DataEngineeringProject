@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import seaborn as sb
-from DatabaseHandler import DatabaseHandler
+from DBHandeling.DatabaseHandler import DatabaseHandler
 
 db_handler = DatabaseHandler('CRIMES')
 db_handler.cursor.execute("SELECT crm_cd, crm_cd_desc FROM crime_description")
