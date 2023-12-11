@@ -1,17 +1,13 @@
 import ast
-import json
 import re
-from confluent_kafka import Consumer, KafkaError
+from confluent_kafka import KafkaError
 from Kafka.KafkaConnector import KafkaConnector
 from Pipeline.uploader import upload_to_crimes_db
-
-kafka_connector = KafkaConnector()
 
 
 class ConsumerHandler:
     def __init__(self):
-        self.kafka_consumer = Consumer(kafka_connector.kafka_params)
-        self.kafka_consumer.subscribe([kafka_connector.kafka_topic])
+        self.kafka_consumer = KafkaConnector().getConsumer()
         self.keep_polling = True
 
     def replace_quotes(self, match):
@@ -30,7 +26,6 @@ class ConsumerHandler:
             decoded_message_str = msg.value().decode('utf-8')
             decoded_message_str = re.sub(r"(?<!\w)'(.*?)'", self.replace_quotes, decoded_message_str)
             entry = ast.literal_eval(decoded_message_str)
-            # entry = json.loads(decoded_message_str)
             upload_to_crimes_db(entry)
 
         self.kafka_consumer.close()
