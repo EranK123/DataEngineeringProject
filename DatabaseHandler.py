@@ -34,3 +34,11 @@ class DatabaseHandler:
     def close_connection(self):
         self.cursor.close()
         self.connection.close()
+
+    def get_column_names(self, table_name):
+        query = const.ALL_TABLE_NAMES_QUERY
+        self.cursor.execute(query, (table_name,))
+        columns = [column[0] for column in self.cursor.fetchall()]
+        return columns
+
+
