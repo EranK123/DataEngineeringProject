@@ -1,16 +1,11 @@
 import const
 from confluent_kafka import Producer
 from confluent_kafka import Consumer
+from singelton_decorator import singleton
 
 
+@singleton
 class KafkaConnector:
-    __instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if cls.__instance is None:
-            cls.__instance = super(KafkaConnector, cls).__new__(cls)
-        return cls.__instance
-
     def __init__(self):
         self.kafka_params = {
             'bootstrap.servers': const.KAFKA_BOOTSTRAP_SERVERS,

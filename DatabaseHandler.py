@@ -2,6 +2,7 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 import const
+from singelton_decorator import singleton
 
 
 class DatabaseHandler:
@@ -40,5 +41,3 @@ class DatabaseHandler:
         self.cursor.execute(query, (table_name,))
         columns = [column[0] for column in self.cursor.fetchall()]
         return columns
-
-

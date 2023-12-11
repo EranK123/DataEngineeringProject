@@ -16,7 +16,6 @@ class ProducerHandler:
         while is_entry:
             row = self.db_handler.cursor.fetchone()
             if row:
-                # entry = dict(zip((column[0] for column in self.db_handler.cursor.description), row))
                 entry = dict(zip((column for column in columns), row))
                 self.kafka_producer.produce(KafkaConnector().kafka_topic, value=str(entry))
                 self.kafka_producer.flush()

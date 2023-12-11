@@ -22,7 +22,7 @@ class ConsumerHandler:
                 else:
                     print(msg.error())
                     self.keep_polling = False
-
+            print(msg.value())
             decoded_message_str = msg.value().decode('utf-8')
             decoded_message_str = re.sub(r"(?<!\w)'(.*?)'", self.replace_quotes, decoded_message_str)
             entry = ast.literal_eval(decoded_message_str)
