@@ -1,10 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
+import const
 
 db = SQLAlchemy()
 
 
 class Area(db.Model):
-    __tablename__ = 'area'
+    __tablename__ = const.TABLE_NAMES['area']
     area = db.Column(db.Integer, primary_key=True)
     area_name = db.Column(db.String)
     rpt_dist_no = db.Column(db.Integer)
@@ -12,7 +13,7 @@ class Area(db.Model):
 
 
 class CaseDetails(db.Model):
-    __tablename__ = 'case_details'
+    __tablename__ = const.TABLE_NAMES['case_details']
     dr_no = db.Column(db.Integer, primary_key=True)
     date_occ = db.Column(db.String)
     time_occ = db.Column(db.String)
@@ -23,7 +24,7 @@ class CaseDetails(db.Model):
 
 
 class CaseRelation(db.Model):
-    __tablename__ = 'case_relation'
+    __tablename__ = const.TABLE_NAMES['case_relation']
     dr_no = db.Column(db.Integer, primary_key=True)
     victid = db.Column(db.Integer)
     area = db.Column(db.Integer)
@@ -32,14 +33,14 @@ class CaseRelation(db.Model):
 
 
 class CrimeDescription(db.Model):
-    __tablename__ = 'crime_description'
+    __tablename__ = const.TABLE_NAMES['crime_description']
     crm_cd = db.Column(db.String, primary_key=True)
     crm_cd_desc = db.Column(db.String)
     dr_no = db.Column(db.Integer)
 
 
 class Victim(db.Model):
-    __tablename__ = 'victim'
+    __tablename__ = const.TABLE_NAMES['victim']
     victid = db.Column(db.Integer, primary_key=True)
     vict_age = db.Column(db.Integer)
     vict_sex = db.Column(db.String)
@@ -48,7 +49,14 @@ class Victim(db.Model):
 
 
 class Weapon(db.Model):
-    __tablename__ = 'weapon'
+    __tablename__ = const.TABLE_NAMES['weapon']
     weapon_used_cd = db.Column(db.String)
     weapon_desc = db.Column(db.String)
-    dr_no = db.Column(db.Integer,  primary_key=True)
+    dr_no = db.Column(db.Integer, primary_key=True)
+
+    def __repr__(self):
+        return str({
+            "dr_no": self.dr_no,
+            "weapon_used_cd": self.weapon_used_cd,
+            "weapon_desc": self.weapon_desc
+        })

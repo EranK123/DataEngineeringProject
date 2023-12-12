@@ -1,15 +1,16 @@
+import pandas as pd
 import requests
 import matplotlib.pyplot as plt
-from api import const
-api_url = const.areas_url
+from api import const_api
 
+api_url = const_api.areas_url
 response = requests.get(api_url)
 data = response.json()
 
-
-areas = [entry['area'] for entry in data['areas']]
-rpt_dist_nos = [entry['rpt_dist_no'] for entry in data['areas']]
-area_names = [entry['area_name'] for entry in data['areas']]
+df = pd.DataFrame(data['areas'], columns=['area', 'rpt_dist_no', 'area_name'])
+areas = df['area']
+rpt_dist_nos = df['rpt_dist_no']
+area_names = df['area_name']
 
 
 plt.figure(figsize=(12, 6))

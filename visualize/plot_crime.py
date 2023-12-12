@@ -2,15 +2,16 @@ import pandas as pd
 import requests
 import matplotlib.pyplot as plt
 import seaborn as sb
-from api import const
+from api import const_api
 
-api_url = const.crimes_url
+api_url = const_api.crime_desc_url
 
 response = requests.get(api_url)
 data = response.json()
 
-crime_names = [entry['crm_cd_desc'] for entry in data['crime_descriptions']]
-crime_codes = [entry['crm_cd'] for entry in data['crime_descriptions']]
+df_crimes = pd.DataFrame(data['crime_descriptions'], columns=['crm_cd_desc', 'crm_cd'])
+crime_names = df_crimes['crm_cd_desc']
+crime_codes = df_crimes['crm_cd']
 
 plt.figure(figsize=(12, 6))
 plt.scatter(crime_codes, crime_names, color='skyblue')

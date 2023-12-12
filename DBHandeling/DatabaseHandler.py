@@ -2,8 +2,10 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 import const
+from singelton_decorator import singleton
 
 
+# @singleton
 class DatabaseHandler:
     __instance = None
 

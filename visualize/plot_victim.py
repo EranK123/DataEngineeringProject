@@ -2,16 +2,18 @@ import pandas as pd
 import requests
 import matplotlib.pyplot as plt
 import seaborn as sb
-from api import const
+from api import const_api
 
-api_url = const.victims_url
+api_url = const_api.victims_url
 
 response = requests.get(api_url)
 data = response.json()
 
-victim_ages = [entry['vict_age'] for entry in data['victims']]
-victim_sexes = [entry['vict_sex'] for entry in data['victims']]
-victim_descents = [entry['vict_descent'] for entry in data['victims']]
+df_victims = pd.DataFrame(data['victims'], columns=['vict_age', 'vict_sex', 'vict_descent'])
+
+victim_ages = df_victims['vict_age']
+victim_sexes = df_victims['vict_sex']
+victim_descents = df_victims['vict_descent']
 
 plt.figure(figsize=(12, 6))
 sb.countplot(x=victim_ages, palette='muted')
