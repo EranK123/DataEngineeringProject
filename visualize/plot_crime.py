@@ -1,15 +1,16 @@
+import pandas as pd
+import requests
 import matplotlib.pyplot as plt
 import seaborn as sb
-from DBHandeling.DatabaseHandler import DatabaseHandler
+from api import const
 
-db_handler = DatabaseHandler('CRIMES')
-db_handler.cursor.execute("SELECT crm_cd, crm_cd_desc FROM crime_description")
+api_url = const.crimes_url
 
-rows = db_handler.cursor.fetchall()
-print(rows)
-crime_codes = [row[0] for row in rows if row[0] is not None]
-print(crime_codes)
-crime_names = [row[1] for row in rows if row[1] is not None]
+response = requests.get(api_url)
+data = response.json()
+
+crime_names = [entry['crm_cd_desc'] for entry in data['crime_descriptions']]
+crime_codes = [entry['crm_cd'] for entry in data['crime_descriptions']]
 
 plt.figure(figsize=(12, 6))
 plt.scatter(crime_codes, crime_names, color='skyblue')
@@ -20,16 +21,11 @@ plt.ylabel('Crime Name')
 for i, code in enumerate(crime_codes):
     plt.annotate(code, (crime_codes[i], crime_names[i]), textcoords="offset points", xytext=(0,5), ha='center')
 
-plt.xticks(rotation=45, ha='right')
-plt.tight_layout()
-
 plt.figure(figsize=(12, 6))
-sb.countplot(y=crime_names, palette='viridis')
-plt.title('Count of Each Crime')
+sb.countplot(y=crime_names, order=pd.value_counts(crime_names).index, palette='viridis')
+plt.title('Count of Each Crime Name')
 plt.xlabel('Count')
 plt.ylabel('Crime Name')
 
 plt.tight_layout()
 plt.show()
-
-db_handler.close_connection()

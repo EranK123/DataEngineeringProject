@@ -1,33 +1,35 @@
+import pandas as pd
+import requests
 import matplotlib.pyplot as plt
-import seaborn as sns
+import seaborn as sb
+from api import const
 
-from DBHandeling.DatabaseHandler import DatabaseHandler
+api_url = const.victims_url
 
-db_handler = DatabaseHandler('CRIMES')
+response = requests.get(api_url)
+data = response.json()
 
-db_handler.cursor.execute("SELECT vict_age, vict_sex, vict_descent FROM victim")
+victim_ages = [entry['vict_age'] for entry in data['victims']]
+victim_sexes = [entry['vict_sex'] for entry in data['victims']]
+victim_descents = [entry['vict_descent'] for entry in data['victims']]
 
-rows = db_handler.cursor.fetchall()
-
-vict_age = [row[0] for row in rows]
-vict_sex = [row[1] for row in rows]
-vict_descent = [row[2] for row in rows]
-
-plt.figure(figsize=(16, 8))
-
-plt.subplot(2, 2, 1)
-sns.countplot(x=vict_age, palette='viridis')
-plt.title('Count of Ages')
-
-plt.subplot(2, 2, 2)
-sns.countplot(x=vict_sex, palette='muted')
-plt.title('Count of Sex')
-
-plt.subplot(2, 2, 3)
-sns.countplot(x=vict_descent, palette='pastel')
-plt.title('Count of Descent')
-
-plt.tight_layout()
+plt.figure(figsize=(12, 6))
+sb.countplot(x=victim_ages, palette='muted')
+plt.title('Count of Victim Ages')
+plt.xlabel('Age')
+plt.ylabel('Count')
 plt.show()
 
-db_handler.close_connection()
+plt.figure(figsize=(8, 6))
+sb.countplot(x=victim_sexes, palette='pastel')
+plt.title('Count of Victim Sexes')
+plt.xlabel('Sex')
+plt.ylabel('Count')
+plt.show()
+
+plt.figure(figsize=(12, 6))
+sb.countplot(x=victim_descents, palette='dark')
+plt.title('Count of Victim Descents')
+plt.xlabel('Descent')
+plt.ylabel('Count')
+plt.show()
