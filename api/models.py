@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+
 import const
 
 db = SQLAlchemy()
@@ -6,10 +7,10 @@ db = SQLAlchemy()
 
 class Area(db.Model):
     __tablename__ = const.TABLE_NAMES['area']
-    area = db.Column(db.Integer, primary_key=True)
+    area = db.Column(db.Integer)
     area_name = db.Column(db.String)
     rpt_dist_no = db.Column(db.Integer)
-    dr_no = db.Column(db.Integer)
+    dr_no = db.Column(db.Integer, primary_key=True)
 
 
 class CaseDetails(db.Model):
@@ -34,18 +35,18 @@ class CaseRelation(db.Model):
 
 class CrimeDescription(db.Model):
     __tablename__ = const.TABLE_NAMES['crime_description']
-    crm_cd = db.Column(db.String, primary_key=True)
+    crm_cd = db.Column(db.String)
     crm_cd_desc = db.Column(db.String)
-    dr_no = db.Column(db.Integer)
+    dr_no = db.Column(db.Integer, primary_key=True)
 
 
 class Victim(db.Model):
     __tablename__ = const.TABLE_NAMES['victim']
-    victid = db.Column(db.Integer, primary_key=True)
+    victid = db.Column(db.Integer)
     vict_age = db.Column(db.Integer)
     vict_sex = db.Column(db.String)
     vict_descent = db.Column(db.String)
-    dr_no = db.Column(db.Integer)
+    dr_no = db.Column(db.Integer, primary_key=True)
 
 
 class Weapon(db.Model):
@@ -54,9 +55,3 @@ class Weapon(db.Model):
     weapon_desc = db.Column(db.String)
     dr_no = db.Column(db.Integer, primary_key=True)
 
-    def __repr__(self):
-        return str({
-            "dr_no": self.dr_no,
-            "weapon_used_cd": self.weapon_used_cd,
-            "weapon_desc": self.weapon_desc
-        })
