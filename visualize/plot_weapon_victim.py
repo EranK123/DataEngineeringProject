@@ -31,5 +31,5 @@ plt.title('Distribution of Victim Sex for Each Weapon')
 plt.xlabel('Weapon Description')
 plt.ylabel('Count')
 plt.legend(title='Victim Sex')
-plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better visibility
+plt.xticks(rotation=10, ha='right')  # Rotate x-axis labels for better visibility
 plt.show()
