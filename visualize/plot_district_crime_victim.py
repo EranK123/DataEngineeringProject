@@ -30,9 +30,9 @@ df_merged_subset['count'] = 1
 
 plt.figure(figsize=(15, 8))
 ax = sns.countplot(data=df_merged_subset, x='rpt_dist_no', hue='vict_sex', hue_order=['M', 'F', 'X'], palette='Set1')
-plt.title('Distribution of rpt_dist_no by vict_sex and crm_cd_desc')
-plt.xlabel('rpt_dist_no')
-plt.ylabel('Count')
+plt.title("Distribution of Reporting District by Victim's Sex and Crime Count")
+plt.xlabel('Reporting District')
+plt.ylabel('Number Of Crimes')
 plt.legend(title='Victim Sex', loc='upper right')
 plt.xticks(rotation=45, ha='right')
 
